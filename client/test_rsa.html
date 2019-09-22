@@ -1,0 +1,69 @@
+<?php 
+include('rsa.php');
+?>
+
+
+<html>
+
+<head>
+	<title>JavaScript RSA Encryption</title>
+</head>
+
+<body>
+	<h1>Lab 8 Demo 1: JavaScript RSA test</h1>
+
+	Enter a plaintext: <input id="plaintext" name="plaintext" type="text">
+	<br /><br />
+	RSA encryption key is defined in the Code!
+	<br /><br />
+	<button type="button" onclick="RSA_encryption()">Encrypt the Message</button>
+
+	<h3>Encrypted value</h3>
+	<p id="encrypted"></p>
+	<br /><br />
+	RSA decryption key is defined in the Code!
+	<br /><br />
+	<button type="button" onclick="RSA_decryption()">Decrypt the "Encrypted value"</button>
+	<h3>Decrypted value</h3>
+	<p id="decrypted"></p>
+
+	<script src="rsa.js"></script>
+	<script type="text/javascript">
+		function RSA_encryption() {
+			var plaintext = document.getElementById("plaintext").value;
+			var pubilc_key = null;
+			fetch('../server/public.key')
+				.then(response => response.text())
+				.then(pubilc_key => {
+					var getKey = "";
+					var encrypt = new JSEncrypt();
+					encrypt.setPublicKey(pubilc_key);
+					var encrypted = encrypt.encrypt(plaintext);
+					document.getElementById("encrypted").innerHTML = encrypted;
+				})
+			// Encrypt with the public key...
+			// fetch('../public.key')
+			//  .then(response => response.text())
+			// .then(text => console.log(text))	
+		}
+
+		function RSA_decryption() {
+
+			var encrypted = document.getElementById("encrypted").innerHTML;
+
+			var private_key = null;
+			fetch('../server/private.key')
+				.then(response => response.text())
+				.then(private_key => {
+					// Decrypt with the private key...
+					var decrypt = new JSEncrypt();
+					decrypt.setPrivateKey(private_key);
+					var decrypted = decrypt.decrypt(encrypted);
+
+					document.getElementById("decrypted").innerHTML = decrypted;
+				})
+		}
+	</script>
+</body>
+
+</html>
