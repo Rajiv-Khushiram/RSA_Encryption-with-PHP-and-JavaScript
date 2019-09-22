@@ -16,8 +16,15 @@ $input = $_POST['message'];
 $privateKey  = file_get_contents('./private.key');
 // compute the decrypted value
 $decrypted = rsa_decryption($input, $privateKey);
+echo 'Received data' . $input;
+echo '<br></br>Unencrypted Data: ' . $decrypted;
 
-echo 'Unencrypted Data: ' . $decrypted;
+$file = fopen("../database/database.txt","a");
+//insert this input (plus a newline) into the database.txt
+fwrite($file, $decrypted."\n");
+fclose($file);
+
+echo '<br></br> Data added to database '
 ?>
 </body>
 </html>
